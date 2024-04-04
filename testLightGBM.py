@@ -12,12 +12,17 @@ from time import time
 from tqdm import tqdm
 import lightgbm as lgbm
 import category_encoders as ce
-from tensorflow.keras.utils import to_categorical
+#from tensorflow.keras.utils import to_categorical
 from sklearn.metrics import classification_report, log_loss, accuracy_score
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import KFold
+from tensorflow import keras
+from keras.models import Model
+from keras.layers import Dense
+from IPython.display import display
 
-data0=pd.read_csv('../input/footballpriceprediction/footballData.csv')
+
+data0=pd.read_csv("C:/Skola/Examensarbete/footballData.csv")
 display(data0[0:3].T)
 
 data0[['value_eur','release_clause_eur']].info()
