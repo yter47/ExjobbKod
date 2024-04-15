@@ -38,7 +38,6 @@ for i, col in enumerate(sample):
     print(grouped_data)
     print()
 
-
 plt.subplots(figsize=(15, 15))
 sample = ['potential', 'league_rank', 'overall', 'age']
 for i, col in enumerate(sample):
@@ -61,7 +60,6 @@ target = df['value_eur']
 X_train, X_val, Y_train, Y_val = train_test_split(features, target,
                                                   random_state=2023,
                                                   test_size=0.25)
-
 
 print(X_train.shape, X_val.shape)
 
