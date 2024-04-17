@@ -46,11 +46,12 @@ random.shuffle(M)
 train=data1.iloc[M[0:(m//4)*3]]
 test=data1.iloc[M[(m//4)*3:]]
 
+sample = ['potential', 'league_rank', 'overall', 'age', 'player_positions']
 target=['value_eur']
 trainY=train[target]
-trainX=train.drop(target,axis=1)
+trainX=train[sample]
 testY=train[target]
-testX=train.drop(target,axis=1)
+testX=train[sample]
 df_columns = list(trainX.columns)
 
 print(df_columns)
@@ -60,15 +61,15 @@ print('x_test shape: ', testX.shape, ' y_test shape: ', testY.shape)
 x_train = trainX.values
 x_test = testX.values
 
-# ravel() is used to turn the data to 1D arrays.
+# ravel() används för att "platta till" data till en endimensionell array.
 train_data = lgbm.Dataset(x_train, label=trainY.values.ravel())  
 eval_data = lgbm.Dataset(x_test, label=testY.values.ravel(), reference=train_data) 
 
-# Length of the x and y of the training data
+# Längden av x och y träningsdata
 print('Train data x length: ', len(train_data.data))
 print('Train data y length: ', len(train_data.label))
 
-# Length of x and y train of the evaluation data
+# Längden av x och y test data
 print('Test data x length: ', len(eval_data.data))
 print('Test data y length: ', len(eval_data.label))
 

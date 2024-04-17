@@ -15,7 +15,7 @@ import category_encoders as ce
 #from tensorflow.keras.utils import to_categorical
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report, log_loss, accuracy_score
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 from tensorflow import keras
 from keras.models import Model
@@ -69,7 +69,6 @@ scaler.fit(X_train)
 X_train = scaler.transform(X_train)
 X_val = scaler.transform(X_val)
 
-
 train_data = lgbm.Dataset(X_train, label=Y_train)
 test_data = lgbm.Dataset(X_val, label=Y_val, reference=train_data)
 
@@ -101,3 +100,4 @@ y_val = model.predict(X_val)
 
 print("Training RMSE: ", np.sqrt(mse(Y_train, y_train)))
 print("Validation RMSE: ", np.sqrt(mse(Y_val, y_val)))
+print("R^2 score",  r2_score(Y_train, y_val))
