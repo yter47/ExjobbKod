@@ -74,11 +74,11 @@ print('Test data x length: ', len(eval_data.data))
 print('Test data y length: ', len(eval_data.label))
 
 params = {
-    'learning_rate':0.1,
+    'learning_rate': 0.1,
     'boosting_type':'gbdt', 
     'objective':'regression', 
     'metric':'rmse', 
-    'max_depth':5
+    'max_depth':12
     }
 
 model = lgbm.train(params, train_data, valid_sets=[eval_data], num_boost_round=500)
