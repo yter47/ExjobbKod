@@ -46,7 +46,7 @@ def labelencoder(df):
 data1=labelencoder(data0)
 m=len(data1)
 M=list(range(m))
-random.seed(2021)
+#random.seed(2021)
 random.shuffle(M)
 
 train=data1.iloc[M[0:(m//4)*3]]
@@ -156,6 +156,7 @@ def fit_lgbm(X, y, cv, params: dict=None, verbose: int=50):
                     eval_set=[(x_valid, y_valid)])
         
         pred_i = clf.predict(x_valid)
+        #pred_i = pred_i.reshape(-1, 1)
         oof_pred[idx_valid] = pred_i
         models.append(clf)
         mse = mean_squared_error(y_valid, pred_i)  # Calculate MSE
@@ -182,6 +183,7 @@ params = {
     'importance_type': 'gain', 
     'random_state': 71,
     'num_leaves': 62,
+    'verbose':500,
     'verbosity': -1
 }
 
@@ -190,19 +192,15 @@ ydf=trainY
 from sklearn.model_selection import KFold
 
 MODELS = []
-for i, target_col in enumerate(target):
-    fold = KFold(n_splits=5, shuffle=True, random_state=71)
-    ydfi = ydf[target_col]
-    y=np.array(ydfi)
-    cv = list(fold.split(train_feat_df, y))
-    oof, models = fit_lgbm(train_feat_df.values, y, cv, params=params)
-    MODELS+=[models]
-    
-    fig,ax = plt.subplots(figsize=(6,6))
-    ax.set_title(target_col,fontsize=20)
-    ax.set_ylabel('Train Predicted '+target_col,fontsize=12)
-    ax.set_xlabel('Train Actual '+target_col,fontsize=12)
-    ax.scatter(y,oof)
+
+
+fold = KFold(n_splits=5, shuffle=True, random_state=71)
+ydfi = ydf[target]
+y=np.array(ydfi)
+cv = list(fold.split(train_feat_df, y))
+y = y.ravel()
+oof, models = fit_lgbm(train_feat_df.values, y, cv, params=params)
+MODELS+=[models]
         
     
 def visualize_importance(models, feat_train_df):
@@ -231,12 +229,13 @@ def visualize_importance(models, feat_train_df):
     
     return fig,ax
 
-for i, target_col in enumerate(target):
-    models=MODELS[i]
-    fold = KFold(n_splits=5, shuffle=True, random_state=71)
-    ydfi=ydf[target_col]
-    y=np.array(ydfi)
-    cv = list(fold.split(train_feat_df, y))
-    oof, models = fit_lgbm(train_feat_df.values, y, cv, params=params)
-    fig, ax = visualize_importance(models, train_feat_df)
-    ax.set_title(target_col+' Imortance',fontsize=20)
+
+print(MODELS)
+models=MODELS[0]
+fold = KFold(n_splits=5, shuffle=True, random_state=71)
+ydfi=ydf[target]
+y=np.array(ydfi)
+y=y.ravel()
+cv = list(fold.split(train_feat_df, y))
+oof, models = fit_lgbm(train_feat_df.values, y, cv, params=params)
+fig, ax = visualize_importance(models, train_feat_df)
